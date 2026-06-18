@@ -2,6 +2,7 @@ import { lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 import MainLayout from '../components/layout/MainLayout';
+import DashboardLayout from '../components/layout/DashboardLayout';
 import GlobalLoadingWrapper from '../components/common/GlobalLoadingWrapper';
 import Spinner from '../components/common/Spinner';
 import NotFound from '../pages/NotFound';
@@ -20,8 +21,14 @@ const Home = lazy(() => import('../pages/Home'));
 const Explore = lazy(() => import('../pages/Explore'));
 const CampaignDetails = lazy(() => import('../pages/CampaignDetails'));
 const CreateCampaign = lazy(() => import('../pages/CreateCampaign'));
-const Dashboard = lazy(() => import('../pages/Dashboard'));
 const Admin = lazy(() => import('../pages/Admin'));
+
+// Dashboard sub-pages
+const DashboardPage    = lazy(() => import('../pages/dashboard/DashboardPage'));
+const MyCampaignsPage  = lazy(() => import('../pages/dashboard/MyCampaignsPage'));
+const DonationsPage    = lazy(() => import('../pages/dashboard/DonationsPage'));
+const WalletPage       = lazy(() => import('../pages/dashboard/WalletPage'));
+const SettingsPage     = lazy(() => import('../pages/dashboard/SettingsPage'));
 
 const SuspenseFallback = () => (
   <div className="flex min-h-screen items-center justify-center">
@@ -49,18 +56,26 @@ const AppRouter = () => {
               <Route path="test-error" element={<ErrorTest />} />
             </Route>
 
-            {/* Auth pages (no layout if desired) */}
+            {/* Auth pages (no layout) */}
             <Route path="register" element={<Register />} />
             <Route path="login" element={<Login />} />
             <Route path="forgot-password" element={<ForgotPasswordPage />} />
             <Route path="verify-email/:token" element={<VerifyEmailPage />} />
 
-            {/* App pages */}
+            {/* Dashboard (nested routes) */}
             <Route path="dashboard" element={
               <ProtectedRoute>
-                <Dashboard />
+                <DashboardLayout />
               </ProtectedRoute>
-            } />
+            }>
+              <Route index element={<DashboardPage />} />
+              <Route path="campaigns" element={<MyCampaignsPage />} />
+              <Route path="donations" element={<DonationsPage />} />
+              <Route path="wallet" element={<WalletPage />} />
+              <Route path="settings" element={<SettingsPage />} />
+            </Route>
+
+            {/* Admin */}
             <Route path="admin" element={
               <AdminRoute>
                 <Admin />
