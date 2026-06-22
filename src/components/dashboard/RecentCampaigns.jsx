@@ -4,9 +4,11 @@ import { ArrowRight, PlusCircle, LayoutGrid } from 'lucide-react';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { fetchRecentCampaigns } from '../../features/dashboard/dashboardThunks';
 import {
+  import {
   selectRecentCampaigns,
   selectDashboardLoading,
 } from '../../features/dashboard/dashboardSelectors';
+import EmptyState from '../common/EmptyState';
 
 // ─── Status badge config ──────────────────────────────────────────────────────
 const STATUS_BADGE = {
@@ -105,22 +107,13 @@ export default function RecentCampaigns() {
             ))}
           </div>
         ) : recent.length === 0 ? (
-          // Empty state
-          <div className="flex flex-col items-center gap-3 py-10 text-slate-400">
-            <LayoutGrid className="w-12 h-12 text-slate-300" />
-            <p className="text-sm font-medium text-slate-600">No campaigns yet</p>
-            <p className="text-xs text-slate-400 text-center max-w-xs">
-              You have not created any campaigns. Launch your first one and start
-              collecting donations.
-            </p>
-            <Link
-              to="/campaigns/create"
-              className="mt-2 flex items-center gap-1.5 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700 transition-colors"
-            >
-              <PlusCircle className="w-4 h-4" />
-              Create Your First Campaign
-            </Link>
-          </div>
+          <EmptyState
+            icon={<LayoutGrid className="w-12 h-12 text-slate-300" />}
+            title="No campaigns yet"
+            description="You have not created any campaigns. Launch your first one and start collecting donations."
+            actionLabel="Create Your First Campaign"
+            onAction={() => (window.location.href = '/campaigns/create')}
+          />
         ) : (
           // Campaign cards grid
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
