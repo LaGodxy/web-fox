@@ -1,6 +1,6 @@
-import { useCallback, useMemo, useRef } from 'react';
-import { useBeforeUnload } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { useCallback, useMemo, useRef } from "react";
+import { useBeforeUnload } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import {
   CAMPAIGN_STEPS,
   nextStep,
@@ -8,21 +8,21 @@ import {
   resetCampaignForm,
   selectDraftCampaign,
   selectFormStep,
-} from '../../features/campaigns/campaignsSlice';
-import BasicInfoStep from '../../components/campaigns/steps/BasicInfoStep';
-import FundingStep from './steps/FundingStep';
-import MediaStep from './steps/MediaStep';
-import ReviewStep from './steps/ReviewStep';
+} from "../../features/campaigns/campaignsSlice";
+import BasicInfoStep from "../../components/campaigns/steps/BasicInfoStep";
+import FundingStep from "./steps/FundingStep";
+import MediaStep from "./steps/MediaStep";
+import ReviewStep from "./steps/ReviewStep";
 
 const STEP_META = [
-  { id: 'details', title: 'Campaign Details', Component: BasicInfoStep },
-  { id: 'funding', title: 'Funding Goal', Component: FundingStep },
-  { id: 'media', title: 'Media', Component: MediaStep },
-  { id: 'review', title: 'Review & Submit', Component: ReviewStep },
+  { id: "details", title: "Campaign Details", Component: BasicInfoStep },
+  { id: "funding", title: "Funding Goal", Component: FundingStep },
+  { id: "media", title: "Media", Component: MediaStep },
+  { id: "review", title: "Review & Submit", Component: ReviewStep },
 ];
 
 const hasUnsavedData = (draft) =>
-  Object.values(draft).some((value) => String(value).trim() !== '');
+  Object.values(draft).some((value) => String(value).trim() !== "");
 
 const CreateCampaignPage = () => {
   const dispatch = useDispatch();
@@ -37,11 +37,11 @@ const CreateCampaignPage = () => {
       (event) => {
         if (isDirty) {
           event.preventDefault();
-          event.returnValue = '';
+          event.returnValue = "";
         }
       },
-      [isDirty]
-    )
+      [isDirty],
+    ),
   );
 
   const isFirstStep = formStep === 0;
@@ -52,7 +52,10 @@ const CreateCampaignPage = () => {
 
   const handleNext = async () => {
     // If the step exposes a validator, run it and only advance when valid.
-    if (validationRef.current && typeof validationRef.current.validate === 'function') {
+    if (
+      validationRef.current &&
+      typeof validationRef.current.validate === "function"
+    ) {
       const ok = await validationRef.current.validate();
       if (ok) dispatch(nextStep());
     } else {
@@ -63,7 +66,7 @@ const CreateCampaignPage = () => {
 
   const handleSubmit = () => {
     // Placeholder submit; integrates with campaign service in a later issue.
-    console.log('Submitting campaign draft:', draft);
+    console.log("Submitting campaign draft:", draft);
     dispatch(resetCampaignForm());
   };
 
@@ -83,20 +86,20 @@ const CreateCampaignPage = () => {
             <li key={step.id} className="flex flex-1 items-center gap-2">
               <span
                 className={[
-                  'flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-semibold',
+                  "flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-semibold",
                   isCurrent
-                    ? 'bg-accent text-white'
+                    ? "bg-accent text-white"
                     : isComplete
-                      ? 'bg-green-500 text-white'
-                      : 'bg-slate-200 text-slate-500',
-                ].join(' ')}
+                      ? "bg-green-500 text-white"
+                      : "bg-slate-200 text-slate-500",
+                ].join(" ")}
               >
-                {isComplete ? '✓' : index + 1}
+                {isComplete ? "✓" : index + 1}
               </span>
               {index < STEP_META.length - 1 && (
                 <span
                   className={`hidden h-0.5 flex-1 rounded sm:block ${
-                    isComplete ? 'bg-green-500' : 'bg-slate-200'
+                    isComplete ? "bg-green-500" : "bg-slate-200"
                   }`}
                 />
               )}
