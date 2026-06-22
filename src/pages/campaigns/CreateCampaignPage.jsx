@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react';
+import { useCallback, useMemo, useRef } from 'react';
 import { useBeforeUnload } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -9,13 +9,13 @@ import {
   selectDraftCampaign,
   selectFormStep,
 } from '../../features/campaigns/campaignsSlice';
-import DetailsStep from './steps/DetailsStep';
+import BasicInfoStep from '../../components/campaigns/steps/BasicInfoStep';
 import FundingStep from './steps/FundingStep';
 import MediaStep from './steps/MediaStep';
 import ReviewStep from './steps/ReviewStep';
 
 const STEP_META = [
-  { id: 'details', title: 'Campaign Details', Component: DetailsStep },
+  { id: 'details', title: 'Campaign Details', Component: BasicInfoStep },
   { id: 'funding', title: 'Funding Goal', Component: FundingStep },
   { id: 'media', title: 'Media', Component: MediaStep },
   { id: 'review', title: 'Review & Submit', Component: ReviewStep },
@@ -48,7 +48,17 @@ const CreateCampaignPage = () => {
   const isLastStep = formStep === CAMPAIGN_STEPS.length - 1;
   const { title, Component } = STEP_META[formStep];
 
-  const handleNext = () => dispatch(nextStep());
+  const validationRef = useRef(null);
+
+  const handleNext = async () => {
+    // If the step exposes a validator, run it and only advance when valid.
+    if (validationRef.current && typeof validationRef.current.validate === 'function') {
+      const ok = await validationRef.current.validate();
+      if (ok) dispatch(nextStep());
+    } else {
+      dispatch(nextStep());
+    }
+  };
   const handleBack = () => dispatch(prevStep());
 
   const handleSubmit = () => {
@@ -99,7 +109,7 @@ const CreateCampaignPage = () => {
         <h2 className="mb-4 text-lg font-semibold text-primary">
           Step {formStep + 1}: {title}
         </h2>
-        <Component />
+        <Component validationRef={validationRef} />
       </div>
 
       <div className="flex items-center justify-between">
