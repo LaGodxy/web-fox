@@ -6,10 +6,10 @@ import {
   nextStep,
   prevStep,
   clearDraft,
-  submitCampaign,
   selectDraftCampaign,
   selectFormStep,
 } from "../../features/campaigns/campaignsSlice";
+import { submitCampaign } from "../../features/campaigns/campaignsThunks";
 import BasicInfoStep from "../../components/campaigns/steps/BasicInfoStep";
 import FundingStep from "./steps/FundingStep";
 import MediaStep from "./steps/MediaStep";
